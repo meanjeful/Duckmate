@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: "hbios";
+    src: url("./fonts/HBIOS.ttf");
+  }
+}
