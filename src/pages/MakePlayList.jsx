@@ -43,7 +43,6 @@ const MakePlayList = () => {
   const handlePasteClipBoard = async () => {
     try {
       const clipboardText = await navigator.clipboard.readText();
-      console.log(clipboardText);
       if (valdiateUrl(clipboardText) === true) {
         let copy = [...list];
         copy.unshift(clipboardText);
@@ -56,31 +55,32 @@ const MakePlayList = () => {
 
   const createShortenResult = async (resultUrl) => {
     try {
-      // const ShortenResult = await axios({
-      //   method: "POST",
-      //   url: "https://api-ssl.bitly.com/v4/shorten",
-      //   headers: {
-      //     Authorization: `Bearer fbea5fe89ba4d01d11cf4ee5fed5abbeb5280eed`,
-      //     "Content-Type": "application/json",
-      //   },
-      //   data: JSON.stringify({
-      //     long_url: resultUrl,
-      //     domain: "bit.ly",
-      //   }),
-      // });
       const ShortenResult = await axios({
         method: "POST",
-        url: "https://openapi.naver.com/v1/util/shorturl.json",
+        url: "https://api-ssl.bitly.com/v4/shorten",
         headers: {
+          Authorization: `Bearer fbea5fe89ba4d01d11cf4ee5fed5abbeb5280eed`,
           "Content-Type": "application/json",
-          "X-Naver-Client-Id": "pmDXGch0YcYWbRSnLg3P",
-          "X-Naver-Client-Secret": "hAvIL1bbps",
-          "Access-Control-Allow-Origin": "*",
         },
         data: JSON.stringify({
-          url: resultUrl,
+          long_url: resultUrl,
+          domain: "bit.ly",
         }),
       });
+      // const ShortenResult = await axios({
+      //   method: "POST",
+      //   url: "https://cors-anywhere/herokuapp.com/openapi.naver.com/v1/util/shorturl",
+      //   headers: {
+      //     "Content-Type": "application/x-www-form-urlencoded",
+      //     "X-Naver-Client-Id": "pmDXGch0YcYWbRSnLg3P",
+      //     "X-Naver-Client-Secret": "hAvIL1bbps",
+      //     "Access-Control-Allow-Origin": "*",
+      //     withCredentials: true,
+      //   },
+      //   data: JSON.stringify({
+      //     url: resultUrl,
+      //   }),
+      // });
       console.log(ShortenResult);
     } catch (error) {
       console.log(error);
