@@ -43,7 +43,8 @@ const MakePlayList = () => {
   const handlePasteClipBoard = async () => {
     try {
       const clipboardText = await navigator.clipboard.readText();
-      if (valdiateUrl(url) === true) {
+      console.log(clipboardText);
+      if (valdiateUrl(clipboardText) === true) {
         let copy = [...list];
         copy.unshift(clipboardText);
         setList(copy);
@@ -54,19 +55,36 @@ const MakePlayList = () => {
   };
 
   const createShortenResult = async (resultUrl) => {
-    const ShortenResult = await axios("https://api-ssl.bitly.com/v4/shorten", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer fbea5fe89ba4d01d11cf4ee5fed5abbeb5280eed`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        long_url: resultUrl,
-        domain: "bit.ly",
-        group_guid: "Ba1bc23dE4F",
-      }),
-    });
-    console.log(ShortenResult);
+    try {
+      // const ShortenResult = await axios({
+      //   method: "POST",
+      //   url: "https://api-ssl.bitly.com/v4/shorten",
+      //   headers: {
+      //     Authorization: `Bearer fbea5fe89ba4d01d11cf4ee5fed5abbeb5280eed`,
+      //     "Content-Type": "application/json",
+      //   },
+      //   data: JSON.stringify({
+      //     long_url: resultUrl,
+      //     domain: "bit.ly",
+      //   }),
+      // });
+      const ShortenResult = await axios({
+        method: "POST",
+        url: "https://openapi.naver.com/v1/util/shorturl.json",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Naver-Client-Id": "pmDXGch0YcYWbRSnLg3P",
+          "X-Naver-Client-Secret": "hAvIL1bbps",
+          "Access-Control-Allow-Origin": "*",
+        },
+        data: JSON.stringify({
+          url: resultUrl,
+        }),
+      });
+      console.log(ShortenResult);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const translateUrl = () => {
@@ -85,9 +103,11 @@ const MakePlayList = () => {
       }
     }
 
-    const resultUrl = `https://tv.naver.com/v/${
+    const mergedUrl = `https://tv.naver.com/v/${
       numberArr[0]
     }?plClips=false:${numberArr.join(":")}&query=${title}`;
+
+    const resultUrl = mergedUrl.replace(" ", "");
 
     setResult(resultUrl);
     createShortenResult(resultUrl);
